@@ -59,7 +59,7 @@ export const Gallery = () => {
   // Ajusta a velocidade do carrossel: mais rápido no mobile (14s) e padrão no desktop (25s)
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
+      if (window.innerWidth < 840) {
         setSpeedDuration(50);
       } else {
         setSpeedDuration(28);

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
 
@@ -53,23 +53,7 @@ export const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [selectedImage, setSelectedImage] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [speedDuration, setSpeedDuration] = useState(25);
   const scrollContainerRef = useRef(null);
-
-  // Ajusta a velocidade do carrossel: mais rápido no mobile (14s) e padrão no desktop (25s)
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 840) {
-        setSpeedDuration(8);
-      } else {
-        setSpeedDuration(28);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const filteredItems = activeCategory === "Todos"
     ? galleryItems
@@ -172,7 +156,7 @@ export const Gallery = () => {
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: speedDuration,
+                duration: window.innerWidth < 640 ? 8 : 25,
                 ease: "linear",
               },
             }}

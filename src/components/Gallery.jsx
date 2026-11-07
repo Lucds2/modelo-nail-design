@@ -52,20 +52,20 @@ const galleryItems = [
 export const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const filteredItems = activeCategory === "Todos"
     ? galleryItems
     : galleryItems.filter(item => item.category === activeCategory);
 
-  // Triplicamos os itens para garantir largura suficiente e loop infinito sem saltos
-  const infiniteItems = [...filteredItems, ...filteredItems, ...filteredItems];
+  // Duplicação dos itens para criar o ciclo contínuo perfeito
+  const duplicatedItems = [...filteredItems, ...filteredItems];
 
   return (
     <section id="portfolio" className="py-16 sm:py-24 px-4 bg-aura-black relative z-10 overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         
-        {/* Cabeçalho da Seção */}
+        {/* Cabeçalho */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
             <motion.div 
@@ -96,7 +96,7 @@ export const Gallery = () => {
           </div>
         </div>
 
-        {/* Filtros de Categoria */}
+        {/* Filtros */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
           {categories.map((cat) => (
             <button
@@ -113,44 +113,50 @@ export const Gallery = () => {
           ))}
         </div>
 
-        {/* Carrossel Infinito com Animação CSS Contínua */}
+        {/* Carrossel Infinito com Framer Motion Nativo */}
         <div 
           className="relative w-full overflow-hidden py-4"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={() => setIsHovered(true)}
+          onTouchEnd={() => setIsHovered(false)}
         >
-          <div className={`flex items-center gap-4 sm:gap-6 w-max animate-marquee ${isPaused ? 'animation-paused' : ''}`}>
-            {infiniteItems.map((item, index) => (
+          <motion.div
+            className="flex items-center gap-4 sm:gap-6 w-max cursor-grab active:cursor-grabbing"
+            animate={isHovered || selectedImage ? {} : { x: ["0%", "-50%"] }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 12,
+                ease: "linear",
+              },
+            }}
+          >
+            {duplicatedItems.map((item, index) => (
               <div
                 key={`${item.id}-${index}`}
                 onClick={() => setSelectedImage(item)}
                 className="group relative min-w-60 sm:min-w-[320px] h-90 sm:h-110 rounded-2xl overflow-hidden bg-aura-card border border-white/10 hover:border-aura-gold/50 transition-all duration-500 cursor-pointer shrink-0"
               >
-                {/* Imagem do Trabalho */}
                 <img 
                   src={item.image} 
                   alt={item.title} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 filter brightness-90 group-hover:brightness-100"
                 />
 
-                {/* Overlays e Gradientes Dark Luxury */}
                 <div className="absolute inset-0 bg-linear-to-t from-aura-black via-aura-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
                 
-                {/* Badge Superior */}
                 <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
                   <span className="bg-aura-black/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] uppercase tracking-widest text-aura-gold border border-aura-gold/30">
                     {item.tag}
                   </span>
                 </div>
 
-                {/* Botão de Expandir no Hover */}
                 <div className="absolute top-4 right-4 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-aura-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   <Maximize2 className="w-4 h-4 text-aura-gold" />
                 </div>
 
-                {/* Legenda Inferior */}
                 <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-aura-gold mb-1 font-medium">
                     {item.category}
@@ -161,10 +167,10 @@ export const Gallery = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        {/* Chamada para o Instagram */}
+        {/* Rodapé / Instagram */}
         <div className="mt-8 sm:mt-10 text-center">
           <a
             href="https://instagram.com"
@@ -183,7 +189,7 @@ export const Gallery = () => {
 
       </div>
 
-      {/* Modal Lightbox em Tela Cheia */}
+      {/* Modal Lightbox */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div

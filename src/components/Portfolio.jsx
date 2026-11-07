@@ -65,7 +65,7 @@ export const Portfolio = () => {
 
   const handleWhatsAppBooking = (serviceName) => {
     const message = encodeURIComponent(`Olá! Gostaria de agendar um horário para o serviço: ${serviceName} no AURA Nail Studio.`);
-    window.open(`https://wa.me/5541999999999?text=${message}`, '_blank');
+    window.open(`https://wa.me/5541984000638?text=${message}`, '_blank');
   };
 
   return (

@@ -22,7 +22,7 @@ const highlights = [
 export const About = () => {
   const handleWhatsAppAbout = () => {
     const message = encodeURIComponent("Olá! Conheci a seção O Studio no site e gostaria de agendar uma experiência no AURA Nail Studio.");
-    window.open(`https://wa.me/5541999999999?text=${message}`, '_blank');
+    window.open(`https://wa.me/5541984000638?text=${message}`, '_blank');
   };
 
   return (

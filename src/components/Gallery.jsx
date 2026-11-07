@@ -60,7 +60,7 @@ export const Gallery = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 840) {
-        setSpeedDuration(50);
+        setSpeedDuration(8);
       } else {
         setSpeedDuration(28);
       }

@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
+import { Sparkles, Maximize2, X } from 'lucide-react';
 
 const categories = ["Todos", "Alongamentos", "Nail Art", "Minimalista", "Esmaltação"];
 
@@ -52,21 +52,14 @@ const galleryItems = [
 export const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const scrollContainerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   const filteredItems = activeCategory === "Todos"
     ? galleryItems
     : galleryItems.filter(item => item.category === activeCategory);
 
-  const duplicatedItems = [...filteredItems, ...filteredItems];
-
-  const handleScroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300;
-      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
+  // Triplicamos os itens para garantir largura suficiente e loop infinito sem saltos
+  const infiniteItems = [...filteredItems, ...filteredItems, ...filteredItems];
 
   return (
     <section id="portfolio" className="py-16 sm:py-24 px-4 bg-aura-black relative z-10 overflow-hidden border-t border-white/5">
@@ -101,24 +94,6 @@ export const Gallery = () => {
               Clique na imagem e saiba mais sobre o procedimento.
             </p>
           </div>
-
-          {/* Controles do Carrossel */}
-          <div className="hidden sm:flex items-center gap-3">
-            <button
-              onClick={() => handleScroll('left')}
-              aria-label="Anterior"
-              className="w-12 h-12 rounded-full border border-white/10 bg-aura-card/60 backdrop-blur-md flex items-center justify-center text-white hover:border-aura-gold hover:text-aura-gold transition-all duration-300 cursor-pointer"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => handleScroll('right')}
-              aria-label="Próximo"
-              className="w-12 h-12 rounded-full border border-white/10 bg-aura-card/60 backdrop-blur-md flex items-center justify-center text-white hover:border-aura-gold hover:text-aura-gold transition-all duration-300 cursor-pointer"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
         </div>
 
         {/* Filtros de Categoria */}
@@ -138,30 +113,16 @@ export const Gallery = () => {
           ))}
         </div>
 
-        {/* Carrossel Infinito com Deslize Contínuo e Responsivo */}
+        {/* Carrossel Infinito com Animação CSS Contínua */}
         <div 
-          className="relative w-full overflow-hidden py-2"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onTouchStart={() => setIsHovered(true)}
-          onTouchEnd={() => setIsHovered(false)}
+          className="relative w-full overflow-hidden py-4"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
         >
-          <motion.div
-            ref={scrollContainerRef}
-            className="flex items-center gap-4 sm:gap-6 cursor-grab active:cursor-grabbing"
-            animate={{
-              x: isHovered || selectedImage ? "0%" : ["0%", "-50%"],
-            }}
-            transition={{
-              x: {
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: window.innerWidth < 640 ? 8 : 25,
-                ease: "linear",
-              },
-            }}
-          >
-            {duplicatedItems.map((item, index) => (
+          <div className={`flex items-center gap-4 sm:gap-6 w-max animate-marquee ${isPaused ? 'animation-paused' : ''}`}>
+            {infiniteItems.map((item, index) => (
               <div
                 key={`${item.id}-${index}`}
                 onClick={() => setSelectedImage(item)}
@@ -200,7 +161,7 @@ export const Gallery = () => {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Chamada para o Instagram */}
@@ -271,12 +232,12 @@ export const Gallery = () => {
                 </div>
 
                 <a
-                  href={`https://wa.me/5541999999999?text=${encodeURIComponent(`Olá! Vi o trabalho "${selectedImage.title}" no portfólio e gostaria de agendar um horário parecido.`)}`}
+                  href="https://wa.me/5541984000638?text=Olá!%20Gostaria%20de%20agendar%20um%20horário."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full mt-6 py-3 px-4 rounded-xl bg-aura-gold text-aura-black text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 hover:bg-white transition-colors duration-300"
                 >
-                  Agendar Estilo Semelhante
+                  Agendar Procedimento
                 </a>
               </div>
             </motion.div>

@@ -37,7 +37,7 @@ export const About = () => {
           playsInline 
           className="w-full h-full min-h-full object-cover object-center filter brightness-45 sm:brightness-50"
         >
-          <source src="/hero-bg.mp4" type="video/mp4" />
+          <source src="/welcome.mp4" type="video/mp4" />
         </video>
         {/* Gradiente escuro para contraste impecável em qualquer ecrã */}
         <div className="absolute inset-0 bg-linear-to-b from-aura-black via-aura-black/90 to-aura-black" />
